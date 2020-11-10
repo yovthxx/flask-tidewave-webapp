@@ -1,0 +1,35 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <div class="user__projects__head">
+        <h3 class="side-bar__title ml-0 mb-0">Join Today!</h3>
+    </div> <!-- user__projects__head -->
+    <div class="container">
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <!-- username -->
+            {{ form.username.label(class='input-name') }}
+            {{ form.username(class='disscus-input col-12') }}
+            <!-- email -->
+            {{ form.email.label(class='input-name') }}
+            {{ form.email(class='disscus-input col-12') }}
+            <!-- password -->
+            <div class="row">
+                <div class="form-pass col-sm-6">
+                    <h6 class="input-name">Password</h6>
+                    {{ form.password(class='disscus-input col-12') }}
+                </div>
+                <div class="form-pass col-sm-6">
+                    <h6 class="input-name">Confirm password</h6>
+                    {{ form.confirm_password(class='disscus-input col-12') }}
+                </div>
+            </div>
+            <!-- submit -->
+            <div class="row show-more mt-4 mb-5">
+            {{ form.submit(class='button form-submit align-self-center col-12') }}
+            </div>
+            <small class='text-muted'>
+                Already have an account? <a class='ml-2' href="{{ url_for('users.login') }}">Sign In</a>
+            </small>
+        </form>
+    </div>
+{% endblock content %}

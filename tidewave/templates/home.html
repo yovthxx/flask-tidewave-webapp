@@ -1,0 +1,145 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <div class="user__projects__head">
+      <h3 class="side-bar__title ml-0 mb-0">Projects</h3>
+  </div>
+
+  <div id="scroller">
+  <template id="post_template">
+      <div class="container hover">
+        <table id="full-table">
+          <tr>
+            <td id="first">
+              <img src="" alt="product-logotype" width="80px" height="80px" class="project__logo" id="logo">
+            </td>
+            <td id="second">
+              <div class="description">
+                <h3 class="project__title"><a class="project__title" href="" id="title"></a></h3>
+                <p class="project__desc" id="content"></p>
+              </div> <!-- description -->
+              <div class="row second-string">
+                <a class="project__icon mt-2 ml-0" href="#" id="comments"><img width="25px" height="25px" src="/static/icons/comments.png" alt="comment-icon"></a>
+                <a class="project__icon mt-2 mr-2 ml-0 sub-icon" href="#" id="subs"><img width="22px" height="22px" src="/static/icons/subs.png" alt="sub-icon"></a>
+                <div class="direct-icon mr-1 align-self-center"><a href="" id="taglink"><p id="tag"></p></a></div>
+                <small id="date" class='align-self-center'></small>
+              </div>
+            </td>
+            <td id="third">
+              <span class="project__tides" id="stage"></span>
+            </td>
+          </tr>
+        </table>
+      </div> <!-- container hover -->
+  </template>
+  </div>
+
+  <!-- element to trigger the IntersectionObserver -->
+  <div id="sentinel"></div>
+{% endblock content %}
+
+
+{% block sidebar1 %}
+  <div class="wrapper welcome">
+    <p class="text"> TideWave provides a more structured and easy to follow feedback system for both developers and their users. We hope that following your favorite SAAS products or any other small scale projects is way more convenient with us!</p>
+  </div> <!-- wrapper -->
+{% endblock sidebar1 %}
+
+
+{% block sidebar3 %}
+  <div class="wrapper direct">
+    <div class="side-bar__head mb-2">
+      <a href="#">
+        <h3 class="side-bar__title">Directories</h3>
+      </a>
+    </div> <!-- side-bar__head -->
+
+    {% for dir in dirs %}
+    <div class="row hover tide__section direct__section">
+      <div class="direct-icon side-bar__project__icon">
+        <a href="/dir/{{ dir.tag }}"><p>/{{ dir.tag }}</p></a>
+      </div>
+
+      <div class="col-10 tide__desc direct-desc">
+        <a href="/dir/{{ dir.tag }}"><h3 class="project__title direct-about">{{ dir.title }}</h3></a>
+      </div>
+    </div>
+    {% endfor %}
+
+    <div class="browse-link d-flex justify-content-end">
+      <a href="/dir">browse<i class="fas fa-arrow-circle-right"></i></a>
+    </div>
+  </div> <!-- wrapper direct -->
+{% endblock sidebar3 %}
+
+
+
+{% block scripts %}
+<script type="text/javascript">
+// DOM references
+var template = document.querySelector("#post_template");
+
+// Loader counter
+var counter=0;
+
+// Function to request new items and render to the dom
+function loadItems() {
+
+  // Use fetch to request data and pass the counter value in the QS
+  fetch(`/load?c=${counter}`).then((response) => {
+
+    // Convert the response data to JSON
+    response.json().then((data) => {
+
+      // If empty JSON, exit the function
+      if (!data.length) {
+        return;
+      }
+
+      // Iterate over the post items in the response
+      for (var i = 0; i < data.length; i++) {
+
+        // Clone the HTML template
+        let template_clone = template.content.cloneNode(true);
+
+        // Fill the template with response data
+
+        template_clone.querySelector("#title").innerHTML = data[i].title
+        template_clone.querySelector('#content').innerHTML = data[i].content
+        template_clone.querySelector('#comments').innerHTML = '<img width="25px" height="25px" src="/static/icons/comments.png" alt="comment-icon">' + data[i].comments
+        template_clone.querySelector('#subs').innerHTML = '<img width="22px" height="22px" src="/static/icons/subs.png" alt="sub-icon">' + data[i].subs
+        template_clone.querySelector('#logo').src = "/static/project_logos/" + data[i].logo
+        template_clone.querySelector('#tag').innerHTML = "/" + data[i].tag
+        template_clone.querySelector('#taglink').href = "/dir/"+data[i].tag
+        template_clone.querySelector('#title').href = "/dir/" + data[i].tag + "/project/" + data[i].title
+        template_clone.querySelector('#date').innerHTML = data[i].date_posted
+
+        if (data[i].stage){
+          template_clone.querySelector('#stage').innerHTML = '<img src="/static/icons/waves.png" width="50px" height="50px" alt="waves">+'+ data[i].stage
+        }
+
+        // Append the filled in post template
+        scroller.appendChild(template_clone);
+        counter += 1;
+        // Render the flask_moment module which manages time display as "1 hour ago" etc, only needed when data is loaded asynchronously
+        flask_moment_render_all()
+      }
+    })
+  })
+}
+
+
+var intersectionObserver = new IntersectionObserver(entries => {
+
+  if (entries[0].intersectionRatio <= 0) {
+    return;
+  }
+
+  loadItems();
+
+});
+
+// Instruct the IntersectionObserver to watch the sentinel
+intersectionObserver.observe(sentinel);
+
+</script>
+{% endblock scripts %}

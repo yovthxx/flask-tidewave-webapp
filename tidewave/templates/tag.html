@@ -1,0 +1,82 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container user__projects">
+  <div class="container row inner">
+    <div class="media">
+    <div class="directory">
+        <p>/{{tag.tag}}</p>
+    </div>
+    <div class="media-body directory__description">
+      <h3 ><a class="project__title">{{ tag.title }}</a></h3>
+      <p class="project__desc">{{ tag.description }}</p>
+    </div> <!--media-body-->
+  </div> <!--media-->
+  {% if current_user.id %}
+    <button class="add-project form-submit ml-auto align-self-center" data-toggle="collapse" data-target="#projectform">+Project</button>
+  {% endif %}
+  </div>
+ {% if current_user.id %}
+ <div class="collapse" id="projectform">
+    <form method="POST" action="/dir/{{ tag.tag }}/project/new" enctype="multipart/form-data">
+      {{ form.hidden_tag() }}
+      <!--project name-->
+      {{ form.title.label(class="input-name") }}
+      {{ form.title(class="disscus-input col-12") }}
+      <!--project description-->
+      {{ form.description.label(class="input-name") }}
+      {{ form.description(class="disscus-input col-12") }}
+      <!--project link-->
+      {{ form.link.label(class="input-name") }}
+      {{ form.link(class="disscus-input col-12") }}
+      <!--project logo-->
+      {{ form.logo.label(class="input-name") }}
+      {{ form.logo(class="disscus-input tide__input col-12") }}
+      <!--project images-->
+      {{ form.postimages.label(class="input-name") }}
+      {{ form.postimages(class="disscus-input tide__input col-12") }}
+      <!--project content-->
+      {{ form.content.label(class="input-name") }}
+      {{ form.content(class="disscus-input tide__input col-12") }}
+      <div class="row show-more mt-5 mb-5">
+        {{ form.submit(class="button form-submit align-self-center col-12") }}
+      </div>
+    </form>
+</div>
+{% endif %}
+</div> <!-- container user__projects -->
+{% endblock content %}
+
+
+{% block content2 %}
+<div class="container content">
+<div class="user__projects__head">
+    <h3 class="side-bar__title ml-0 mb-0">Projects</h3>
+</div> <!-- user__projects__head -->
+{% for post in posts %}
+  <div class="container hover">
+    <table id="full-table">
+      <tr>
+        <td id="first">
+          <img src="{{ url_for('static', filename='project_logos/' + post.logo_file) }}" alt="product-logotype" width="80px" height="80px" class="project__logo">
+        </td>
+        <td id="second">
+          <div class="description">
+            <h3 class="project__title"><a class="project__title" href="/dir/{{ post.tag.tag }}/project/{{ post.title }}">{{ post.title }}</a></h3>
+            <p class="project__desc">{{ post.description }}</p>
+          </div> <!-- description -->
+          <div class="row second-string">
+            <a class="project__icon mt-2 ml-0" href="#"><img width="25px" height="25px" src="/static/icons/comments.png" alt="comment-icon">{{ post.comments|length + post.replies|length }}</a>
+            <a class="project__icon mt-2 mr-2 ml-0 sub-icon" href="#"><img width="22px" height="22px" src="/static/icons/subs.png" alt="sub-icon">{{ post.subscribers|length }}</a>
+            <div class="direct-icon mr-1"><a href="/dir/{{ post.tag.tag }}"><p>/{{ post.tag.tag }}</p></a></div>
+            <small id="date" class='align-self-center'>{{ moment(post.date_posted).fromNow() }}</small>
+          </div>
+        </td>
+        <td id="third">
+          <span class="project__tides"><img src="/static/icons/waves.png" width="50px" height="50px" alt="waves">+{{ post.stage }}</span>
+        </td>
+      </tr>
+    </table>
+  </div> <!-- container hover -->
+{% endfor %}
+</div>
+{% endblock content2 %}

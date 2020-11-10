@@ -1,0 +1,268 @@
+{% extends "layout.html" %}
+  {% block content %}
+    <div class="container">
+      <table id="full-table">
+        <tr>
+          <td id="first">
+            <img src="{{ url_for('static', filename='project_logos/' + post.logo_file) }}" alt="product-logotype" width="80px" height="80px" class="project__logo">
+          </td>
+          <td id="second">
+            <div class="description">
+              <h3 class="project__title">{{ tide.title }}</h3>
+              <p class="project__desc">{{ tide.description }}</p>
+            </div> <!-- description -->
+            <div class="row second-string">
+              <a class="project__icon mt-2 ml-0" href="#"><img width="25px" height="25px" src="/static/icons/comments.png" alt="comment-icon">{{ post.comments|length + post.replies|length }}</a>
+              <a class="project__icon mt-2 mr-2 ml-0 sub-icon" href="#"><img width="22px" height="22px" src="/static/icons/subs.png" alt="sub-icon">{{ post.subscribers|length }}</a>
+
+              {% if current_user.is_authenticated and current_user.follows_post(post) %}
+              <form action="/dir/{{ post.tag.tag }}/project/{{ post.title }}/unsubscribe" method="post">
+              <button class="heart d-flex mr-2"><i class="fas fa-heart heart1"></i><i class="fas fa-heart-broken heart2"></i></button>
+              </form>
+              {% endif %}
+              <div class="direct-icon mr-1"><a href="/dir/{{ post.tag.tag }}"><p>/{{ post.tag.tag }}</p></a></div>
+            </div>
+          </td>
+          <td id="third">
+            <span class="project__tides"><img src="/static/icons/waves.png" width="50px" height="50px" alt="waves">+{{ tide.stage }}</span>
+          </td>
+        </tr>
+      </table>
+    </div> <!-- container -->
+    {% if images|length > 1 %}
+    <div class="container img-cont mb-3">
+      <div id="sync1" class="slider owl-carousel">
+        {% for image in images %}
+        <div class="item"><img src="/static/images/{{ image.filename }}" alt=""></div>
+        {% endfor %}
+      </div>
+    </div> <!-- img-cont -->
+    <div class="container">
+      <div id="sync2" class="navigation-thumbs owl-carousel">
+        {% for image in images %}
+        <div class="item"><img src="/static/images/{{ image.filename }}" alt=""></div>
+        {% endfor %}
+      </div>
+    </div>
+    {% else %}
+    {% for image in images %}
+    <div class="container cont">
+      <img class="project__image" width="100%" height="auto" src="/static/images/{{ image.filename }}" alt="project-image">
+    </div> <!-- img-cont -->
+    {% endfor %}
+    {% endif %}
+    <div class="container cont">
+      <div class="message-section">
+      <p class="project__desc">{{ tide.content }}</p>
+      </div>
+      <a class="button project__buttons button-edit" href="/dir/{{post.tag.tag}}/project/{{post.title}}/{{tide.stage}}/edit"><i class="fas fa-edit"></i>Edit</a>
+      {% if tide.stage == post.stage %}
+      <a class="button project__buttons button-del" data-toggle="modal" data-target="#deleteModal"><i class="fas fa-trash"></i>Delete</a>
+      {% endif %}
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">Delete Tide?</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <form action="/dir/{{ post.tag.tag }}/project/{{ post.title }}/{{ tide.stage }}/delete" method="POST">
+              <input class="btn btn-danger" type="submit" value="Delete">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endblock content %}
+
+
+  {% block content2 %}
+  {% if current_user == post.author %}
+  <div class="content">
+  <div class="container form-section">
+    <form method="POST" action="/dir/{{ post.tag.tag }}/project/{{ post.title }}/new_tide" enctype="multipart/form-data">
+      {{ tideform.hidden_tag() }}
+      <!--project name-->
+      {{ tideform.tide_title.label(class="input-name") }}
+      {{ tideform.tide_title(class="disscus-input col-12") }}
+      <!--project name-->
+      {{ tideform.tide_images.label(class="input-name") }}
+      {{ tideform.tide_images(class="form-control-file") }}
+      <!--project name-->
+      {{ tideform.tide_content.label(class="input-name") }}
+      {{ tideform.tide_content(class="disscus-input col-12") }}
+      {{ tideform.submit(class="button form-submit col-12") }}
+    </form>
+  </div>
+  </div>
+  {% endif %}
+  {% endblock content2 %}
+
+
+  {% block content3 %}
+  <div class="container content">
+    <div class="container wave">
+
+      <div class="row form-section">
+        <table id="full-table">
+          <tr>
+            <form method="POST" action="/dir/{{ post.tag.tag }}/project/{{ post.title }}/{{ tide.stage }}/new_wave">
+              {{ waveform.hidden_tag() }}
+            <td id="second">
+              {{ waveform.wave_content(class="disscus-input", placeholder="A wave..") }}
+            </td>
+            <td id="third">
+              <button class="form-submit button-sub" type='submit'>Submit</button>
+            </td></form>
+          </tr>
+        </table>
+      </div>
+      {% for wave in waves %}
+      <div class="wave__update">
+        <h3 class="project__title wave__title">{{ wave.date_posted.strftime('%d-%m-%Y') }}</h3>
+        <p class="project__desc wave__desc">{{ wave.content }}</p>
+      </div>
+      {% endfor %}
+    </div><!-- wave -->
+  </div><!-- content -->
+{% endblock content3 %}
+
+{% block content4 %}
+  {% if current_user.is_authenticated or comments %}
+  <div class="content">
+    <div class="container discussion">
+
+      {% if current_user.is_authenticated %}
+        <div class="row form-section">
+          <table id="full-table">
+            <tr>
+              <form method="POST" action="/dir/{{ post.tag.tag }}/project/{{ post.title }}/{{ tide.stage }}/new_comment">
+              {{ commentform.hidden_tag() }}
+              <td id="second">
+                {{ commentform.comment_content(class="disscus-input", placeholder="What do you think?..") }}
+              </td>
+              <td id="third">
+                <button class="form-submit button-sub" type='submit'>Submit</button>
+              </td></form>
+            </tr>
+          </table>
+        </div> <!-- form-section -->
+      {% endif %}
+      <br>
+    {% if comments %}
+      <div class="comments">
+        {% for comment in comments %}
+        <div class="container upper-comment" id="comment{{comment.id}}">
+          <div class="row user-info">
+            <a href=""><img src="/static/profile_pics/{{ comment.author.image_file }}" alt="avatar" width="40px" height="40px" class="avatar"></a>
+            <a class="align-self-center" href=""><h3 class="project__title nickname">{{ comment.author.username }}</h3></a>
+            <h6 class="post__time align-self-center">{{ moment(comment.date_posted).fromNow() }}</h6>
+            {% if current_user == comment.author %}
+            <form class="ml-auto align-self-center" action="/dir/{{ post.tag.tag }}/project/{{ post.title }}/comment/{{ comment.id }}/delete" method="POST"><button class='like align-self-center'><i class="fas fa-times"></i></button></form>
+            {% endif %}
+          </div> <!-- user-info -->
+          <div class="row d-block post">
+            <p class="project__desc post__text">{{ comment.content }}</p>
+            <div class="row post__links align-items-center">
+              {% if current_user.id %}
+              <button type="button" class="post__reply" data-toggle="collapse" data-target="#replyto{{ comment.id }}">
+                Reply
+                <i class="fas fa-reply"></i>
+              </button>
+              {% endif %}
+            </div> <!-- post__links -->
+                <div class="collapse" id="replyto{{ comment.id }}">
+                  <div class="form-section reply-form-section">
+                    <form method="POST" action="/dir/{{ post.tag.tag }}/project/{{ post.title }}/0/{{ comment.id }}/new_reply">
+                      {{ replyform.hidden_tag() }}
+                      <div class="row form-section pt-0">
+                        <table id="full-table">
+                          <tr>
+                            <td id="second">
+                              {{ replyform.reply_content(class="disscus-input reply-input", placeholder="Reply...") }}
+                            </td>
+                            <td id="third">
+                              {{ replyform.submit(class="form-submit button-sub") }}
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+            {% for reply in comment.replies %}
+              <div class="container lower-comment">
+                <div class="row user-info">
+                  <a href=""><img src="/static/profile_pics/{{ reply.author.image_file }}" alt="avatar" width="30px" height="30px" class="avatar"></a>
+                  <a class="align-self-center"href=""><h3 class="project__title nickname">{{ reply.author.username }}</h3></a>
+                  <h6 class="post__time">{{ moment(reply.date_posted).fromNow() }}</h6>
+                  {% if current_user == reply.author %}
+                  <form class="ml-auto align-self-center" action="/dir/{{ post.tag.tag }}/project/{{ post.title }}/reply/{{ reply.id }}/delete" method="POST"><button class='like align-self-center'><i class="fas fa-times"></i></button></form>
+                  {% endif %}
+                </div> <!-- user-info -->
+                <div class="row d-block post">
+                  <p class="project__desc post__text">{{ reply.content }}</p>
+                  <br>
+                </div> <!-- post -->
+              </div> <!-- lower-comment -->
+            {% endfor %}
+          </div> <!-- row d -->
+        </div> <!-- container upper-comment next-comment -->
+        {% endfor %}
+        </div> <!-- comments -->
+        <br>
+    {% endif %}
+      </div>
+    </div> <!-- container discussion -->
+    {% endif %}
+  {% endblock content4 %}
+
+
+  {% if current_user.id %}
+  {% block sidebar1 %}
+    {% if current_user.id %}
+    {% if not current_user.follows_post(post) %}
+      <form id='followbutton' action="/dir/{{ post.tag.tag }}/project/{{ post.title }}/subscribe" method="post">
+          <input class="button-follow" type="submit" id='action' name="Follow" value="Follow" />
+      </form>
+    {% endif %}
+    {% endif %}
+  {% endblock sidebar1 %}
+  {% endif %}
+
+
+   {% block sidebar2 %}
+    <div class="wrapper tide">
+
+      <div class="side-bar__head mb-2">
+          <h3 class="side-bar__title">Tides</h3>
+      </div> <!-- side-bar__head -->
+      <div class="row tide__section">
+        <div class="row side-bar__project__row">
+          <img src="/static/project_logos/{{ post.logo_file }}" alt="product-logotype" width="45px" height="45px" class="side-bar__project-logo ml-3">
+        </div>
+        <div class="col-10 tide__desc">
+          <a href="/dir/{{ post.tag.tag }}/project/{{ post.title }}"><h3 class="project__title pl-2">{{ post.title }}</h3></a>
+          <p class="project__desc side-bar__project__desc pl-2">{{ post.description }}</p>
+        </div>
+      </div>
+      {% for tide in tides %}
+      <div class="row hover tide__section">
+        <div class="row side-bar__project__row">
+          <span class="tide__num float-left ml-3">+{{ tide.stage }}</span>
+        </div>
+        <div class="col-10 tide__desc">
+          <a href="/dir/{{ post.tag.tag }}/project/{{ post.title }}/{{ tide.stage }}"><h3 class="project__title pl-2">{{ tide.title }}</h3></a>
+          <p class="project__desc side-bar__project__desc pl-2">{{ moment(tide.date_posted).fromNow() }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+   {% endblock sidebar2 %}
+

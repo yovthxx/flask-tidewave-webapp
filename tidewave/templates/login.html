@@ -1,0 +1,27 @@
+{% extends 'layout.html' %}
+{% block content %}
+        <div class="user__projects__head">
+            <h3 class="side-bar__title ml-0 mb-0">Log In</h3>
+        </div> <!-- user__projects__head -->
+        <div class="container">
+            <form method="POST">
+                <!-- email -->
+                {{ form.hidden_tag() }}
+                {{ form.email.label(class='input-name') }}
+                {{ form.email(class='disscus-input col-12') }}
+                <!-- password -->
+                {{ form.password.label(class='input-name') }}
+                {{ form.password(class='disscus-input col-12') }}
+                <!-- remember -->
+                {{ form.remember.label(class='form-check-label input-name mt-3') }}
+                {{ form.remember }}
+                <!-- submit -->
+                <div class="row show-more mt-2 mb-5">
+                  {{ form.submit(class='button form-submit align-self-center col-12') }}
+                </div>
+                <small class='text-muted'>
+                    Need an account? <a class='ml-2' href="{{ url_for('users.register') }}">Sign Up</a>
+                </small>
+            </form>
+        </div>
+{% endblock content %}

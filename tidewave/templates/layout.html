@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{url_for('static', filename='owl.carousel.min.css') }}">
+    <link rel="stylesheet" href="{{url_for('static', filename='owl.theme.default.min.css') }}">
+    <link rel="stylesheet" href="{{url_for('static', filename='main.css') }}">
+    {{ moment.include_jquery() }}
+    {{ moment.include_moment() }}
+    <title>TideWave</title>
+  </head>
+  <body>
+
+<!--------------------------------------------HEADER------------------------------------------------->
+    <header id="menu-bar" class="container menu-bar">
+      <nav class="row navbar navbar-expand-sm">
+        <a class="logo" href="/"><h1>TideWave</h1></a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"><i class="fas fa-water"></i></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-auto">
+            <a href="/search"><li class="nav-item button search-button"><i class="fas fa-search"></i></li></a>
+            <a href="/dir"><li class="nav-item button button-nav">/dir</li></a>
+            {% if current_user.is_authenticated %}
+
+              {% if current_user.new_notifications() %}
+              <a href="/inbox"><li class="nav-item button button-nav"><i class="far fa-envelope"></i> +{{ current_user.new_notifications() }}</li></a>
+              {% else %}
+              <a href="/inbox"><li class="nav-item button button-nav"><i class="far fa-envelope"></i></li></a>
+              {% endif %}
+
+            <a href="/account"><li class="nav-item button button-nav">{{ current_user.username }}</li></a>
+            {% else %}
+            <a href="/login"><li class="nav-item button button-nav">Log-in</li></a>
+            <li class="nav-item button button-register">
+              <a href="/register">Register</a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </nav>
+    </header>
+<!--------------------------------------------END OF HEADER------------------------------------------------->
+
+<section class="container all">
+  <div class="row">
+
+<!------ MAIN SECTION ------>
+    <div class="container main col-xl-8">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <div class="content">
+            {% for category, message in messages %}
+            <div class='alert alert-{{ category }}'>
+              {{ message }}
+            </div>
+            {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+            <!-- main content section -->
+      <div class="content">
+            {% block content %}{% endblock content %}
+      </div>
+            {% block content2 %}{% endblock content2 %}
+            {% block content3 %}{% endblock content3 %}
+            {% block content4 %}{% endblock content4 %}
+    </div> <!-- container main col-xl-8 -->
+<!------ MAIN SECTION ------>
+
+<!------ SIDEBARS ------>
+<div class="container second ml-auto col-xl-4">
+
+          {% block sidebar1 %}{% endblock sidebar1 %}
+          {% block sidebar2 %}{% endblock sidebar2 %}
+          {% block sidebar3 %}{% endblock sidebar3 %}
+
+
+</div> <!-- container second ml-auto col-xl-4 -->
+
+<!------ SIDEBARS ------>
+
+    </div> <!-- row -->
+</section> <!-- all -->
+
+
+    {% block scripts %}
+    {% endblock scripts %}
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="/static/owl.carousel.min.js"></script>
+    <script type="text/javascript" src="/static/image-carousel.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/1e587ed8bd.js" crossorigin="anonymous"></script>
+  </body>
+</html>

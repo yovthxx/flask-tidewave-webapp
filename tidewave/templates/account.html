@@ -1,0 +1,73 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container">
+<table id="full-table">
+  <tr>
+    <td id="first">
+      <img src="/static/profile_pics/{{ current_user.image_file }}" alt="user-image" width="70px" height="70px" class="project__logo mb-3 mt-3">
+    </td>
+    <td id="second">
+      <div class="description">
+        <a href="/user/{{ current_user.username }}"><h3 class="project__title mt-1">{{ current_user.username }}</h3></a>
+        <p class="project__desc">{{ current_user.bio }}</p>
+      </div> <!-- description -->
+    </td>
+    <td id="third">
+      <a href='/logout'><button class="button-logout form-submit ml-auto " type='submit'>Logout</button></a>
+    </td>
+  </tr>
+</table>
+</div> <!-- container -->
+{% endblock content %}
+
+{% block content2 %}
+<div class="container content">
+
+    <div class="user__projects__head">
+        <h3 class="side-bar__title ml-0 mb-0">Update profile</h3>
+    </div> <!-- user__projects__head -->
+    <div class="container">
+        <form class="form-pass mt-1 mb-2" enctype="multipart/form-data" method="POST">
+        {{ form.hidden_tag() }}
+        <!-- username -->
+        {{ form.username.label(class='input-name') }}
+        {{ form.username(class='disscus-input col-12') }}
+        <!-- email -->
+        {{ form.email.label(class='input-name') }}
+        {{ form.email(class='disscus-input col-12') }}
+        <!-- bio -->
+        {{ form.bio.label(class='input-name') }}
+        {{ form.bio(class='disscus-input tide__input col-12') }}
+        <!-- profile picture -->
+        <h6 class="input-name">Profile picture</h6>
+        {{ form.picture(class='form-control-file') }}
+        <!-- submit -->
+        <div class="row show-more mt-5 mb-5">
+            {{ form.submit(class='button form-submit align-self-center col-12') }}
+        </div>
+        </form>
+    </div>
+</div> <!-- container content -->
+{% endblock content2 %}
+
+
+{% block sidebar2 %}
+  <div class="wrapper following">
+  <div class="side-bar__head">
+    <a href="#">
+      <h3 class="side-bar__title">Subscribed to ({{ current_user.subscriptions|length }}):</h3>
+    </a>
+  </div> <!-- side-bar__head -->
+  {% for sub in current_user.subscriptions %}
+  <div class="row hover tide__section">
+    <div class="row side-bar__project__row">
+      <img src="/static/project_logos/{{ sub.post.logo_file }}" alt="product-logotype" width="45px" height="45px" class="side-bar__project-logo ml-3">
+    </div>
+    <div class="col-10 tide__desc">
+      <h3 class="project__title pl-2"><a class="project__title" href="/dir/{{ sub.post.tag.tag }}/project/{{ sub.post.title }}">{{ sub.post.title }}</a></h3>
+      <p class="project__desc side-bar__project__desc pl-2">{{ sub.post.description }}</p>
+    </div>
+  </div>
+  {% endfor %}
+  </div>
+{% endblock sidebar2 %}

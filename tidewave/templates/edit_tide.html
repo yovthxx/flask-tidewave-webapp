@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="user__projects__head">
+        <h3 class="side-bar__title ml-0 mb-0">Edit Tide</h3>
+    </div>
+    <div class="container">
+      <table id="full-table">
+        <tr>
+          <td id="first">
+            <img src="{{ url_for('static', filename='project_logos/' + post.logo_file) }}" alt="product-logotype" width="80px" height="80px" class="project__logo">
+          </td>
+          <td id="second">
+            <div class="description">
+              <a href="/dir/{{post.tag.tag}}/project/{{post.title}}"><h3 class="project__title">{{ tide.title }}</h3></a>
+              <p class="project__desc">{{ tide.description }}</p>
+            </div> <!-- description -->
+            <div class="row second-string">
+              <a class="project__icon mt-2 ml-0" href="#"><img width="25px" height="25px" src="/static/icons/comments.png" alt="comment-icon">{{ post.comments|length + post.replies|length }}</a>
+              <a class="project__icon mt-2 mr-2 ml-0 sub-icon" href="#"><img width="22px" height="22px" src="/static/icons/subs.png" alt="sub-icon">{{ post.subscribers|length }}</a>
+
+              {% if current_user.is_authenticated and current_user.follows_post(post) %}
+              <form action="/dir/{{ post.tag.tag }}/project/{{ post.title }}/unsubscribe" method="post">
+              <button class="heart d-flex mr-2"><i class="fas fa-heart heart1"></i><i class="fas fa-heart-broken heart2"></i></button>
+              </form>
+              {% endif %}
+              <div class="direct-icon mr-1"><a href="/dir/{{ post.tag.tag }}"><p>/{{ post.tag.tag }}</p></a></div>
+            </div>
+          </td>
+          <td id="third">
+            <span class="project__tides"><img src="/static/icons/waves.png" width="50px" height="50px" alt="waves">+{{ tide.stage }}</span>
+          </td>
+        </tr>
+      </table>
+
+    <form method="POST" action="/dir/{{post.tag.tag}}/project/{{post.title}}/{{tide.stage}}/edit" enctype="multipart/form-data">
+      {{ form.hidden_tag() }}
+      <!--project name-->
+      {{ form.title.label(class="input-name") }}
+      {{ form.title(class="disscus-input col-12") }}
+      <!--tide images-->
+      {{ form.images.label(class="input-name") }}
+      {{ form.images(class="disscus-input tide__input col-12") }}
+      <!--project content-->
+      {{ form.content.label(class="input-name") }}
+      {{ form.content(class="disscus-input tide__input col-12") }}
+      <div class="row show-more mt-5 mb-5">
+        {{ form.submit(class="button form-submit align-self-center col-12") }}
+      </div>
+    </form>
+    </div> <!-- container -->
+{% endblock content %}

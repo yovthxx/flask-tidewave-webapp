@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="user__projects__head">
+    <h3 class="side-bar__title ml-0 mb-0">Directories</h3>
+</div> <!-- user__projects__head -->
+
+{% for tag in tags %}
+  <div class="container project hover">
+  <div class="container row inner">
+    <div class="media">
+      <div class="directory">
+          <p>/{{tag.tag}}</p>
+      </div>
+      <div class="media-body directory__description">
+        <h3><a class="project__title" href="/dir/{{tag.tag}}">{{ tag.title }}</a></h3>
+        <p class="project__desc">{{ tag.description }}</p>
+      </div> <!--media-body-->
+    </div> <!--media-->
+  </div>
+  </div>
+{% endfor %}
+{% endblock content %}

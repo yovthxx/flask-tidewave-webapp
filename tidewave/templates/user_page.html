@@ -1,0 +1,99 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container">
+<table id="full-table">
+  <tr>
+    <td id="first">
+      <img src="/static/profile_pics/{{ current_user.image_file }}" alt="user-image" width="70px" height="70px" class="project__logo mb-3 mt-3">
+    </td>
+    <td id="second">
+      <div class="description">
+        <h3 class="project__title mt-1">{{ user.username }}</h3>
+        <p class="project__desc">{{ user.bio }}</p>
+      </div> <!-- description -->
+    </td>
+  </tr>
+</table>
+</div> <!-- container -->
+{% endblock content %}
+
+{% block content2 %}
+  <div class="container content">
+    <div class="user__projects__head">
+      <h3 class="side-bar__title ml-0 mb-0">Projects({{user.posts|length}}):</h3>
+    </div> <!-- user__projects__head -->
+  {% for post in posts %}
+    <div class="container hover">
+    <table id="full-table">
+      <tr>
+        <td id="first">
+          <img src="/static/project_logos/{{post.logo_file}}" alt="product-logotype" width="80px" height="80px" class="project__logo">
+        </td>
+        <td id="second">
+          <div class="description">
+            <h3 class="project__title"><a class="project__title" href="/dir/{{ post.tag.tag }}/project/{{ post.title }}">{{ post.title }}</a></h3>
+            <p class="project__desc">{{ post.description }}</p>
+          </div> <!-- description -->
+          <div class="row second-string">
+            <a class="project__icon mt-2 ml-0" href="#"><img width="25px" height="25px" src="/static/icons/comments.png" alt="comment-icon">{{ post.comments|length + post.replies|length }}</a>
+            <a class="project__icon mt-2 mr-2 ml-0 sub-icon" href="#"><img width="22px" height="22px" src="/static/icons/subs.png" alt="sub-icon">{{ post.subscribers|length }}</a>
+            <div class="direct-icon mr-1"><a href=""><p>/{{post.tag.tag}}</p></a></div>
+          </div>
+        </td>
+        {% if post.stage %}
+        <td id="third">
+          <span class="project__tides"><img src="/static/icons/waves.png" width="50px" height="50px" alt="waves">+{{ post.stage }}</span>
+        </td>
+        {% endif %}
+      </tr>
+    </table>
+    </div> <!-- container hover -->
+  {% endfor %}
+  </div>
+{% endblock content2 %}
+
+{% block content3 %}
+<div class="container content">
+  <div class="user__projects__head">
+    <h3 class="side-bar__title ml-0 mb-0">Comments ({{user.comments|length}}):</h3>
+  </div> <!-- side-bar__head -->
+  <div class="container">
+  {% for comment in comments %}
+    {% if comment.stage %}
+    <div class="row project__row">
+      <h6><span class="project__date">{{ moment(comment.date_posted).fromNow() }}</span> in <a class="project__name" href="/dir/{{ comment.post.tag.tag }}/project/{{ comment.post.title }}/{{comment.stage}}#comment{{ comment.id }}">{{ comment.post.title }} +{{ comment.stage }}</a> </h6>
+    </div> <!--row project__row-->
+    {% else %}
+    <div class="row project__row">
+      <h6><span class="project__date">{{ moment(comment.date_posted).fromNow() }}</span> in <a class="project__name" href="/dir/{{ comment.post.tag.tag }}/project/{{ comment.post.title }}#comment{{ comment.id }}">{{ comment.post.title }}</a> </h6>
+    </div> <!--row project__row-->
+    {% endif %}
+    <div class="message-section">
+      <p class="project__comment">{{ comment.content }}</p>
+      <a class="post__link" href="#"><span class="replies-quantity">{{ comment.replies|length }} replies</span></a>
+    </div>
+  {% endfor %}
+  </div>
+</div>
+{% endblock content3 %}
+
+{% block sidebar2 %}
+  <div class="wrapper following">
+  <div class="side-bar__head">
+    <a href="#">
+      <h3 class="side-bar__title">Subscribed to ({{ user.subscriptions|length }}):</h3>
+    </a>
+  </div> <!-- side-bar__head -->
+  {% for sub in user.subscriptions %}
+  <div class="row hover tide__section">
+    <div class="row side-bar__project__row">
+      <img src="/static/project_logos/{{ sub.post.logo_file }}" alt="product-logotype" width="45px" height="45px" class="side-bar__project-logo ml-3">
+    </div>
+    <div class="col-10 tide__desc">
+      <h3 class="project__title pl-2"><a class="project__title" href="/dir/{{ sub.post.tag.tag }}/project/{{ sub.post.title }}">{{ sub.post.title }}</a></h3>
+      <p class="project__desc side-bar__project__desc pl-2">{{ sub.post.description }}</p>
+    </div>
+  </div>
+  {% endfor %}
+  </div>
+{% endblock sidebar2 %}

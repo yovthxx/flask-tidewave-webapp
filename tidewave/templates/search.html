@@ -1,0 +1,52 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <div class="container discussion">
+      <div class="row form-section">
+        <table id="full-table">
+          <tr>
+            <form method="POST" action="">
+            {{ searchform.hidden_tag() }}
+            <td id="second">
+              {{ searchform.keyword(class="disscus-input", placeholder="Search in projects") }}
+            </td>
+            <td id="third">
+              <button class="form-submit button-sub" type='submit'>Search</button>
+            </td></form>
+          </tr>
+        </table>
+      </div> <!-- form-section -->
+    </div>
+    {% for post in posts %}
+      <div class="container hover">
+        <table id="full-table">
+          <tr>
+            <td id="first">
+              <img src="{{ url_for('static', filename='project_logos/' + post.logo_file) }}" alt="product-logotype" width="80px" height="80px" class="project__logo">
+            </td>
+            <td id="second">
+              <div class="description">
+                <h3 class="project__title"><a class="project__title" href="/dir/{{ post.tag.tag }}/project/{{ post.title }}">{{ post.title }}</a></h3>
+                <p class="project__desc">{{ post.description }}</p>
+              </div> <!-- description -->
+              <div class="row second-string">
+                <a class="project__icon mt-2 ml-0" href="#"><img width="25px" height="25px" src="/static/icons/comments.png" alt="comment-icon">{{ post.comments|length + post.replies|length }}</a>
+                <a class="project__icon mt-2 mr-2 ml-0 sub-icon" href="#"><img width="22px" height="22px" src="/static/icons/subs.png" alt="sub-icon">{{ post.subscribers|length }}</a>
+                <div class="direct-icon mr-1"><a href="/dir/{{ post.tag.tag }}"><p>/{{ post.tag.tag }}</p></a></div>
+                <small id="date" class='align-self-center'>{{ moment(post.date_posted).fromNow() }}</small>
+              </div>
+            </td>
+            <td id="third">
+              <span class="project__tides"><img src="/static/icons/waves.png" width="50px" height="50px" alt="waves">+{{ post.stage }}</span>
+            </td>
+          </tr>
+        </table>
+      </div> <!-- container hover -->
+    {% endfor %}
+{% endblock content %}
+
+
+{% block sidebar1 %}
+          <div class="wrapper welcome">
+            <p class="text"> TideWave provides a more structured and easy to follow feedback system for both developers and their users. We hope that following your favorite SAAS products or any other small scale projects is way more convenient with us!</p>
+          </div> <!-- wrapper -->
+{% endblock sidebar1 %}

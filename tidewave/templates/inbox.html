@@ -1,0 +1,135 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <div class="container">
+    <table id="full-table">
+      <tr>
+        <td id="first">
+          <img src="/static/profile_pics/{{ current_user.image_file }}" alt="user-image" width="70px" height="70px" class="project__logo mb-3 mt-3">
+        </td>
+        <td id="second">
+          <div class="description">
+            <a href="/user/{{ current_user.username }}"><h3 class="project__title mt-1">{{ current_user.username }}</h3></a>
+            <p class="project__desc">{{ current_user.bio }}</p>
+          </div> <!-- description -->
+        </td>
+        <td id="third">
+          <a href='/inbox/clear'><button class="button-logout form-submit ml-auto " type='submit'>Clear All</button></a>
+        </td>
+      </tr>
+    </table>
+  </div> <!-- container -->
+{% endblock content %}
+
+
+{% block content2 %}
+{% if new %}
+<div class="container content">
+    <div class="user__projects__head">
+        <h3 class="side-bar__title ml-0 mb-0">New</h3>
+    </div> <!-- user__projects__head -->
+    {% for new in new %}
+    {% if new.event == '1' %}
+      <div class="container hover">
+        <table id="full-table">
+          <tr>
+            <td id="first">
+              <img src="{{ url_for('static', filename='project_logos/' + new.post.logo_file) }}" alt="product-logotype" width="80px" height="80px" class="project__logo">
+            </td>
+            <td id="second">
+              <div class="description">
+                <h3 class="project__title"><a class="project__title" href="/dir/{{ new.post.tag.tag }}/project/{{ new.post.title }}">{{ new.post.title }}</a></h3>
+                <p class="project__desc">{{ moment(new.date_posted).fromNow() }}</p>
+              </div> <!-- description -->
+              <div class="row second-string">
+                NEW TIDE {{new.event}}
+              </div>
+            </td>
+            <td id="third">
+              <span class="project__tides"><img src="/static/icons/waves.png" width="50px" height="50px" alt="waves">+{{ new.post.stage }}</span>
+            </td>
+          </tr>
+        </table>
+      </div> <!-- container hover -->
+      {% elif new.event == '2' %}
+      <div class="container hover">
+        <table id="full-table">
+          <tr>
+            <td id="first">
+              <img src="{{ url_for('static', filename='project_logos/' + new.post.logo_file) }}" alt="product-logotype" width="80px" height="80px" class="project__logo">
+            </td>
+            <td id="second">
+              <div class="description">
+                <h3 class="project__title"><a class="project__title" href="/dir/{{ new.post.tag.tag }}/project/{{ new.post.title }}">{{ new.post.title }}</a></h3>
+                <p class="project__desc">{{ moment(new.date_posted).fromNow() }}</p>
+              </div> <!-- description -->
+              <div class="row second-string">
+                NEW WAVE {{new.wave.content}}
+              </div>
+            </td>
+            <td id="third">
+            </td>
+          </tr>
+        </table>
+      </div> <!-- container hover -->
+      {% endif %}
+    {% endfor %}
+</div> <!-- container content -->
+{% endif %}
+{% endblock content2 %}
+
+
+{% block content3 %}
+{% if old %}
+<div class="container content">
+    <div class="user__projects__head">
+        <h3 class="side-bar__title ml-0 mb-0">Seen</h3>
+    </div> <!-- user__projects__head -->
+    {% for old in old %}
+      {% if old.event == '1' %}
+      <div class="container hover">
+        <table id="full-table">
+          <tr>
+            <td id="first">
+              <img src="{{ url_for('static', filename='project_logos/' + old.post.logo_file) }}" alt="product-logotype" width="80px" height="80px" class="project__logo">
+            </td>
+            <td id="second">
+              <div class="description">
+                <h3 class="project__title"><a class="project__title" href="/dir/{{ old.post.tag.tag }}/project/{{ old.post.title }}">{{ old.post.title }}</a></h3>
+                <p class="project__desc">{{ moment(old.date_posted).fromNow() }}</p>
+              </div> <!-- description -->
+              <div class="row second-string">
+                NEW TIDE {{old.event}}
+              </div>
+            </td>
+            <td id="third">
+              <span class="project__tides"><img src="/static/icons/waves.png" width="50px" height="50px" alt="waves">+{{ old.post.stage }}</span>
+            </td>
+          </tr>
+        </table>
+      </div> <!-- container hover -->
+      {% elif old.event == '2' %}
+      <div class="container hover">
+        <table id="full-table">
+          <tr>
+            <td id="first">
+              <img src="{{ url_for('static', filename='project_logos/' + old.post.logo_file) }}" alt="product-logotype" width="80px" height="80px" class="project__logo">
+            </td>
+            <td id="second">
+              <div class="description">
+                <h3 class="project__title"><a class="project__title" href="/dir/{{ old.post.tag.tag }}/project/{{ old.post.title }}">{{ old.post.title }}</a></h3>
+                <p class="project__desc">{{ moment(old.date_posted).fromNow() }}</p>
+              </div> <!-- description -->
+              <div class="row second-string">
+                NEW WAVE {{old.wave.content}}
+              </div>
+            </td>
+            <td id="third">
+            </td>
+          </tr>
+        </table>
+      </div> <!-- container hover -->
+      {% endif %}
+    {% endfor %}
+</div> <!-- container content -->
+{% endif %}
+{% endblock content3 %}
