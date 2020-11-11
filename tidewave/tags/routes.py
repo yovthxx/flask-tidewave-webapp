@@ -3,7 +3,7 @@ from flask_login import current_user
 from tidewave import db
 from tidewave.models import Posts, Tags
 from tidewave.posts.forms import PostForm
-from tidewave.posts.utils import save_logo, save_banner
+from tidewave.posts.utils import save_logo
 
 tags = Blueprint('tags', __name__)
 
