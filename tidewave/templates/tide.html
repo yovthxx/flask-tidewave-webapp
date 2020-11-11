@@ -55,9 +55,11 @@
       <div class="message-section">
       <p class="project__desc">{{ tide.content }}</p>
       </div>
+      {% if current_user == post.author %}
       <a class="button project__buttons button-edit" href="/dir/{{post.tag.tag}}/project/{{post.title}}/{{tide.stage}}/edit"><i class="fas fa-edit"></i>Edit</a>
       {% if tide.stage == post.stage %}
       <a class="button project__buttons button-del" data-toggle="modal" data-target="#deleteModal"><i class="fas fa-trash"></i>Delete</a>
+      {% endif %}
       {% endif %}
     </div>
     <!-- Modal -->
@@ -105,10 +107,13 @@
   {% endblock content2 %}
 
 
-  {% block content3 %}
+  {% block content3 %} <!--waves-->
   <div class="container content">
+    <div class="user__projects__head">
+        <h3 class="side-bar__title ml-0 mb-0">Waves</h3>
+    </div>
     <div class="container wave">
-
+      {% if current_user == post.author %}
       <div class="row form-section">
         <table id="full-table">
           <tr>
@@ -123,6 +128,9 @@
           </tr>
         </table>
       </div>
+      {% else %}
+      <br>
+      {% endif %}
       {% for wave in waves %}
       <div class="wave__update">
         <h3 class="project__title wave__title">{{ wave.date_posted.strftime('%d-%m-%Y') }}</h3>
@@ -136,6 +144,9 @@
 {% block content4 %}
   {% if current_user.is_authenticated or comments %}
   <div class="content">
+    <div class="user__projects__head">
+      <h3 class="side-bar__title ml-0 mb-0">Comments</h3>
+    </div>
     <div class="container discussion">
 
       {% if current_user.is_authenticated %}

@@ -4,7 +4,7 @@ from tidewave import db
 from tidewave.models import Posts, Tags, Tides, Comments, Replies, Waves, Images
 from tidewave.posts.forms import PostForm, SearchForm, PostEditForm
 from tidewave.tides.forms import TideForm
-from tidewave.posts.utils import save_logo, save_banner, save_image
+from tidewave.posts.utils import save_logo, save_image
 from tidewave.comments.forms import CommentForm, ReplyForm
 from tidewave.waves.forms import WaveForm
 import random
